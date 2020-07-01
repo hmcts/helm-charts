@@ -18,7 +18,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "elasticsearch.uname" -}}
 {{- if empty .Values.fullnameOverride -}}
 {{- if empty .Values.nameOverride -}}
-{{ .Values.clusterName }}-{{ .Values.nodeGroup }}
+{{ .Release.Name }}-{{ .Values.clusterName }}-{{ .Values.nodeGroup }}
 {{- else -}}
 {{ .Values.nameOverride }}-{{ .Values.nodeGroup }}
 {{- end -}}
@@ -31,7 +31,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if empty .Values.masterService -}}
 {{- if empty .Values.fullnameOverride -}}
 {{- if empty .Values.nameOverride -}}
-{{ .Values.clusterName }}-master
+{{ .Release.Name }}-{{ .Values.clusterName }}-master
 {{- else -}}
 {{ .Values.nameOverride }}-master
 {{- end -}}
