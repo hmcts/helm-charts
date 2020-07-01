@@ -84,8 +84,10 @@ def test_defaults():
     assert c["volumeMounts"][0]["mountPath"] == "/usr/share/elasticsearch/data"
     assert c["volumeMounts"][0]["name"] == uname
 
+    # volumeClaimTemplates
     v = r["statefulset"][uname]["spec"]["volumeClaimTemplates"][0]
     assert v["metadata"]["name"] == uname
+    assert "labels" not in v["metadata"]
     assert v["spec"]["accessModes"] == ["ReadWriteOnce"]
     assert v["spec"]["resources"]["requests"]["storage"] == "30Gi"
 
@@ -479,6 +481,20 @@ def test_adding_multiple_persistence_annotations():
     assert annotations["world"] == "hello"
 
 
+def test_enabling_persistence_label_in_volumeclaimtemplate():
+    config = """
+persistence:
+  labels:
+    enabled: true
+"""
+    r = helm_template(config)
+    volume_claim_template_labels = r["statefulset"][uname]["spec"][
+        "volumeClaimTemplates"
+    ][0]["metadata"]["labels"]
+    statefulset_labels = r["statefulset"][uname]["metadata"]["labels"]
+    assert volume_claim_template_labels == statefulset_labels
+
+
 def test_adding_a_secret_mount():
     config = """
 secretMounts:
@@ -573,6 +589,22 @@ podAnnotations:
             "iam.amazonaws.com/role"
         ]
         == "es-role"
+    )
+
+
+def test_adding_serviceaccount_annotations():
+    config = """
+rbac:
+  create: true
+  serviceAccountAnnotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::111111111111:role/k8s.clustername.namespace.serviceaccount
+"""
+    r = helm_template(config)
+    assert (
+        r["serviceaccount"][uname]["metadata"]["annotations"][
+            "eks.amazonaws.com/role-arn"
+        ]
+        == "arn:aws:iam::111111111111:role/k8s.clustername.namespace.serviceaccount"
     )
 
 
