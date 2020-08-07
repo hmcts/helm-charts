@@ -3,9 +3,6 @@
 This Helm chart is a lightweight way to configure and run our official
 [Elasticsearch Docker image][].
 
-**Warning**: This branch is used for development, please use [7.8.0][] release
-for released version.
-
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -13,8 +10,6 @@ for released version.
 
 - [Requirements](#requirements)
 - [Installing](#installing)
-  - [Install released version using Helm repository](#install-released-version-using-helm-repository)
-  - [Install development version using 7.8 branch and 7.8.1-SNAPSHOT versions](#install-development-version-using-78-branch-and-781-snapshot-versions)
 - [Upgrading](#upgrading)
 - [Usage notes](#usage-notes)
 - [Configuration](#configuration)
@@ -51,23 +46,16 @@ default settings. All of these settings are configurable.
 
 See [supported configurations][] for more details.
 
+
 ## Installing
 
-This chart is tested with the latest 7.8.1-SNAPSHOT versions.
-
-### Install released version using Helm repository
+This chart is tested with 7.8.1 version.
 
 * Add the Elastic Helm charts repo:
 `helm repo add elastic https://helm.elastic.co`
 
-* Install the latest 7.8 release:
-`helm install --name elasticsearch elastic/elasticsearch`
-
-### Install development version using 7.8 branch and 7.8.1-SNAPSHOT versions
-
-* Clone the git repo: `git clone git@github.com:elastic/helm-charts.git`
-
-* Install it: `helm install --name elasticsearch ./helm-charts/elasticsearch`
+* Install 7.8.1 release:
+`helm install --name elasticsearch --version 7.8.1 elastic/elasticsearch`
 
 
 ## Upgrading
@@ -123,7 +111,7 @@ support multiple versions with minimal changes.
 | `httpPort`                         | The http port that Kubernetes will use for the healthchecks and the service. If you change this you will also need to set [http.port][] in `extraEnvs`                                                                                                    | `9200`                                          |
 | `imagePullPolicy`                  | The Kubernetes [imagePullPolicy][] value                                                                                                                                                                                                                  | `IfNotPresent`                                  |
 | `imagePullSecrets`                 | Configuration for [imagePullSecrets][] so that you can use a private registry for your image                                                                                                                                                              | `[]`                                            |
-| `imageTag`                         | The Elasticsearch Docker image tag                                                                                                                                                                                                                        | `7.8.1-SNAPSHOT`                                         |
+| `imageTag`                         | The Elasticsearch Docker image tag                                                                                                                                                                                                                        | `7.8.1`                                         |
 | `image`                            | The Elasticsearch Docker image                                                                                                                                                                                                                            | `docker.elastic.co/elasticsearch/elasticsearch` |
 | `ingress`                          | Configurable [ingress][] to expose the Elasticsearch service. See [values.yaml][] for an example                                                                                                                                                          | see [values.yaml][]                             |
 | `initResources`                    | Allows you to set the [resources][] for the `initContainer` in the StatefulSet                                                                                                                                                                            | `{}`                                            |
@@ -347,9 +335,8 @@ automated testing pipeline.
 2. Add any required secrets or credentials into an Elasticsearch keystore
 following the [how to use the keystore][] guide.
 3. Configure the [snapshot repository][] as you normally would.
-4. To automate snapshots you can use a tool like [curator][]. In the future
-there are plans to have Elasticsearch manage automated snapshots with
-[Snapshot Lifecycle Management][].
+4. To automate snapshots you can use [Snapshot Lifecycle Management][] or a tool
+like [curator][].
 
 ### How to configure templates post-deployment?
 
@@ -385,7 +372,6 @@ about our development and testing process.
 
 
 [#63]: https://github.com/elastic/helm-charts/issues/63
-[7.8.0]: https://github.com/elastic/helm-charts/blob/7.8.0/elasticsearch/README.md
 [BREAKING_CHANGES.md]: https://github.com/elastic/helm-charts/blob/master/BREAKING_CHANGES.md
 [CHANGELOG.md]: https://github.com/elastic/helm-charts/blob/master/CHANGELOG.md
 [CONTRIBUTING.md]: https://github.com/elastic/helm-charts/blob/master/CONTRIBUTING.md
@@ -402,7 +388,7 @@ about our development and testing process.
 [docker for mac]: https://github.com/elastic/helm-charts/tree/7.8/elasticsearch/examples/docker-for-mac
 [elasticsearch cluster health status params]: https://www.elastic.co/guide/en/elasticsearch/reference/7.8/cluster-health.html#request-params
 [elasticsearch docker image]: https://www.elastic.co/guide/en/elasticsearch/reference/7.8/docker.html
-[elasticsearch oss docker image]: https://www.docker.elastic.co/#elasticsearch-7-8-0-oss
+[elasticsearch oss docker image]: https://www.docker.elastic.co/r/elasticsearch/elasticsearch-oss
 [environment variables]: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/#using-environment-variables-inside-of-your-config
 [environment from variables]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
 [examples]: https://github.com/elastic/helm-charts/tree/7.8/elasticsearch/examples/
@@ -445,7 +431,7 @@ about our development and testing process.
 [secret]: https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets
 [securityContext]: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 [service types]: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-[snapshot lifecycle management]: https://github.com/elastic/elasticsearch/issues/38461
+[snapshot lifecycle management]: https://www.elastic.co/guide/en/elasticsearch/reference/7.8/snapshot-lifecycle-management.html
 [snapshot plugin]: https://www.elastic.co/guide/en/elasticsearch/plugins/7.8/repository.html
 [snapshot repository]: https://www.elastic.co/guide/en/elasticsearch/reference/7.8/modules-snapshots.html
 [supported configurations]: https://github.com/elastic/helm-charts/tree/7.8/README.md#supported-configurations
